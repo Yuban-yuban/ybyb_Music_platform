@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>我的标签【在线音乐推荐系统】</title>
+    {% include '../common/css.html' %}
+</head>
+<body class="sticky-header left-side-collapsed" style="">
+	<section>
+		<div class="main-content" style="margin-left:0px;padding-top:0px">
+			{% include '../common/header.html' %}
+			<div id="page-wrapper">
+				<div class="inner-content" align="center">
+					<div class="music-left" style="float:none;">
+						<div class="albums">
+							{% include '../common/menu.html' %}
+							<div class="col-md-3" style="width:74%;text-align: left">
+                                <div class="bs-docs-example" style="color:black;">
+									<div id="labelrecord_div">
+										<ul class="list-group" style="margin:4% 4% 0px 4%;">
+										    {% for type in types %}
+											  	<li class="list-group-item" style="display: inline-block;
+											  		width:30%;border:0px;background-color:inherit;">
+											  			<input type="checkbox"
+                                                               {% for labelrecord in labelrecords %}{% if labelrecord.typeid.id == type.id %}checked="checked" {% endif %}{% endfor %}
+                                                               name="typeid" value="{{ type.id }}"/>{{ type.typename }}
+											  	</li>
+                                            {% endfor %}
+										</ul>
+										<div class="form-group" align="center">
+											<div style="display:inline-block;" >
+												<div class="btn btn-danger" id="submitBtn" onclick="doLabelrecord()" style="color: #fff">提交信息</div>
+											</div>
+										</div>
+									</div>
+						  		</div>
+								<div class="clearfix"> </div>
+							</div>
+						</div><div class="clearfix"> </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% include '../common/footer.html' %}
+	</section>
+    {% include '../common/js.html' %}
+</body>
+<script>
+	function doLabelrecord(){
+		var typeids = "";
+		$("input[type='checkbox']:checked").each(function(){
+			typeids+=$(this).val()+",";
+		});
+		if(typeids==""){
+			layer.msg("请至少选择一条数据！");
+			return;
+		}
+		typeids = typeids.substring(0,typeids.lastIndexOf(","));
+		var data ="typeids="+typeids+"&csrfmiddlewaretoken={{ csrf_token }}";
+		common_ajax_other("/labelrecord/save",data);
+	}
+</script>
+</html>

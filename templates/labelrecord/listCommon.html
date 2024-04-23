@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>请选择兴趣标签【在线音乐推荐系统】</title>
+    {% include '../common/css.html' %}
+</head>
+<body>
+  	<div id="labelrecord_div">
+		<ul class="list-group" style="margin:4% 4% 0px 4%;">
+		    {% for type in types %}
+			  	<li class="list-group-item" style="display: inline-block;
+			  		width:23%;border:0px;background-color:inherit;">
+			  		<input type="checkbox" name="typeid" value="{{ type.id }}"/>{{ type.typename }}
+			  	</li>
+            {% endfor %}
+		</ul>
+		<div class="form-group" align="center">
+			<div style="display:inline-block;" >
+				<a href="javascript:doLabelrecord()" id="submitBtn" class="toggle-btn"
+					style="width:100px;background:#ff410f">提交信息</a>
+			</div>
+		</div>
+	</div>
+  </body>
+</html>
+{% include '../common/js.html' %}
+<script>
+	function doLabelrecord(){
+		var data = "userid={{ userid }}";
+		var typeids = "";
+		$("input[type='checkbox']:checked").each(function(){
+			typeids+=$(this).val()+",";
+		});
+		if(typeids==""){
+			layer.msg("请至少选择一条数据！");
+			return;
+		}
+		typeids = typeids.substring(0,typeids.lastIndexOf(","));
+		data+="&typeids="+typeids+"&csrfmiddlewaretoken={{ csrf_token }}";
+		console.info(data)
+		common_ajax_callback_other("/labelrecord/saveCommon",data,callbackSuccess,null);
+	}
+
+	function callbackSuccess(data){
+		setTimeout(function () {parent.location.href="/"; }, globalTimeout);
+	}
+</script>

@@ -1,0 +1,32 @@
+<style>
+	.currentMenuCommon{
+		font-weight:900;
+	}
+</style>
+<div class="tittle-head">
+	<h3 class="tittle">
+		<h3 class="tittle"><span class="new">USER</span>个人中心</h3>
+	</h3>
+	<div class="clearfix"></div>
+</div>
+<div class="tittle-head">
+	<ol class="breadcrumb" id="menuCommonId" style="background-color: #f3cabea1" align="left">
+	  <li><a href="/user/detailCommon?userid={{ user.id }}">个人中心</a></li>
+	  <li><a href="/playlist/listCommon?userid={{ user.id }}">个人歌单</a></li>
+	</ol>
+</div>
+<script>
+	var pathname = "";//pathname是为一个页面中有多个操作，我的评论
+	//菜单选中js
+	window.onload = function(){
+		$("#menuCommonId").find("a").each(function(){
+			if(pathname==""){
+				pathname = window.location.pathname+window.location.search
+			}
+			if($(this).attr("href")==pathname){
+				$(this).parent().addClass("currentMenuCommon");
+				return;
+			}
+		});
+	}
+</script>

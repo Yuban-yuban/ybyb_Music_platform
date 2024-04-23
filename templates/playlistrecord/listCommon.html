@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>个人歌单详情【在线音乐推荐系统】</title>
+    {% include '../common/css.html' %}
+</head>
+<body class="sticky-header left-side-collapsed" style="">
+	<section>
+		<div class="main-content" style="margin-left:0px;padding-top:0px">
+			{% include '../common/header.html' %}
+			<div id="page-wrapper">
+				<div class="inner-content" align="center">
+					<div class="music-left" style="float:none;">
+						<div class="albums">
+                            {% include '../common/menuCommon.html' %}
+							<div class="col-md-3 content-grid" >
+								<a class="play-icon popup-with-zoom-anim" href="/user/detailCommon?userid={{ user.id }}">
+									<img src="{{ user.header.url }}" title="{{ user.username }}">
+								</a>
+							</div>
+							<div class="col-md-3" style="width:74%;text-align: left">
+                                <div class="bs-docs-example" style="color:black;">
+                                    <div class="btn btn-danger" onclick="javascript:window.open('/play?playlistid={{ playlist.id }}')"
+									style="color: #fff;margin-bottom:5px" title="播放歌单">
+									播放歌单</div>
+									<table class="table table-bordered">
+									    <thead >
+										    <tr style="text-align: center;">
+										        <th>序号</th>
+										        <th>歌单名称</th>
+										        <th>音乐名称</th>
+										        <th>添加时间</th>
+										    </tr>
+									    </thead>
+									    <tbody>
+									  	    {% if not pageBean %}
+                                                <tr><td colspan="4"><font style="color:black">暂无数据</font></td><tr>
+                                            {% endif %}
+                                            {% for playlistrecord in pageBean %}
+												<tr>
+												    <td>{{ forloop.counter }}</td>
+												    <td>{{ playlist.playlistname }}</td>
+												    <td>
+                                                        <a href="/music/detail?musicid={{ playlistrecord.musicid.id }}">
+                                                            {{ playlistrecord.musicid.musicname }}
+                                                        </a>
+												    </td>
+												    <td>{{ playlistrecord.createtime }}</td>
+												</tr>
+                                            {% endfor %}
+									    </tbody>
+									</table>
+						  		</div>
+								<div class="clearfix"> </div>
+                                <form action="/playlistrecord/listCommon?userid={{ user.id }}&playlistid={{ playlist.id }}" method="post" id="form">
+                                    {% csrf_token %}
+    		  				        <input type="hidden" name="page" value="{{ page }}" id="page">
+		    		  			</form>
+                                {% include '../common/page.html' %}
+							</div>
+						</div>
+                        <div class="clearfix"> </div>
+                        <br><br><br>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% include '../common/footer.html' %}
+	</section>
+    {% include '../common/js.html' %}
+</body>
+<script>
+    pathname = "/playlist/listCommon?userid={{ user.id }}"
+</script>
+</html>

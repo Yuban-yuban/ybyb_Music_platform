@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录【在线音乐推荐系统】</title>
+    {% include '../common/css.html' %}
+</head>
+<body class="sticky-header left-side-collapsed" style="">
+	<section>
+		<div class="main-content" style="margin-left:0px;padding-top:0px">
+			{% include '../common/header.html' %}
+			<div id="page-wrapper">
+				<div class="inner-content" align="center">
+					<div class="music-left" style="float:none;">
+						<div class="albums">
+							<div class="tittle-head" align="center">
+								<h3 class="tittle" style="float:none">
+									用户登录
+								</h3>
+								<div class="clearfix"></div>
+							</div><br>
+							<div class="col-md-3" style="width:100%;text-align: left">
+								<form action="/doLogin" method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+                                    {% csrf_token %}
+									<div class="form-group">
+						                <label for="inputEmail" class="col-sm-2 col-md-2 control-label" style="width:25%">用户名：</label>
+						                <div class="col-sm-6 col-md-6">
+						                    <input type="text" name="username" id="username" class="form-control" value=""  maxlength="255" />
+						                </div>
+						            </div><div class="clearfix"> </div><br>
+						            <div class="form-group">
+						                <label for="inputEmail" class="col-sm-2 col-md-2 control-label" style="width:25%">密码：</label>
+						                <div class="col-sm-6 col-md-6">
+						                    <input type="password" class="form-control" name="password" id="password" maxlength="255" value=""/>
+						                </div>
+						            </div><div class="clearfix"> </div><br>
+						            <div class="form-group" align="center">
+										<div style="" >
+											<div class="btn btn-danger" id="submitBtn" style="color: #fff">&nbsp;&nbsp;&nbsp;&nbsp;登录&nbsp;&nbsp;&nbsp;&nbsp;</div>
+										</div>
+										<a href="/register" style="margin-top: 10px;font-size: 10px;color: black;">没有账号，请先注册</a>
+									</div>
+									<br><br><br><br>
+								</form>
+							</div>
+						</div><div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% include '../common/footer.html' %}
+	</section>
+    {% include '../common/js.html' %}
+    <script>
+        jQuery(document).ready(function() {
+			$("#submitBtn").on("click",function(){
+				if($("#username").val()=="" || $("#password").val()==""){
+					layer.msg("数据不能为空!");
+				}else{
+                    common_ajax_self_result($("#form").attr("action"),$("#form").serialize(),callbackSucess);
+	         	}
+			});
+		});
+        //登录成功回调函数
+        function callbackSucess(data){
+            if(data.success=="1"){
+                if(data.userid!=null){
+                    selectLabel(data.userid);
+                }else{
+                    layer.msg("登录成功！");
+                    setTimeout(function () { location.href="/"; }, globalTimeout);
+                }
+            }else{
+                layer.msg("登录失败！用户名或密码错误！");
+            }
+        }
+
+        //选择自定义标签
+		function selectLabel(userid){
+			layer.open({
+				  type: 2,
+				  skin: 'layui-layer-molv', //加上边框
+				  closeBtn: 1, //不显示关闭按钮
+				  shadeClose: true, //开启遮罩关闭
+				  area: ['50%', '63%'], //宽高
+				  title:"请选择兴趣标签",
+				  content: "/labelrecord/listCommon?userid="+userid
+			});
+		}
+
+    </script>
+</body>
+</html>

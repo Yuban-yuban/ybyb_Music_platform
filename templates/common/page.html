@@ -1,0 +1,20 @@
+<div style="color:#333;font-size: 15px;text-align: center;padding-top:10px">
+    <span >
+        共{{ pageBean.paginator.count }}条数据&nbsp;
+        第{{ pageBean.number }}/{{ pageBean.paginator.num_pages }}页&nbsp;
+    </span>
+    <a href="javascript:toPage(1)">首页</a>&nbsp;
+    {% if pageBean.has_previous %}
+        <a href="javascript:toPage({{ pageBean.previous_page_number }})">上一页 </a>&nbsp;
+    {% endif %}
+    {% if pageBean.has_next %}
+        <a href="javascript:toPage({{ pageBean.next_page_number }})">下一页 </a>&nbsp;
+    {% endif %}
+        <a href="javascript:toPage({{ pageBean.paginator.num_pages }})">尾页</a>
+</div>
+<script>
+    function toPage(page){
+        $("#page").val(page);
+        $("#form").submit();
+    }
+</script>

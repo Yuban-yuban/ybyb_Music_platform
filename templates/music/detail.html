@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>音乐信息【在线音乐推荐系统】</title>
+    {% include '../common/css.html' %}
+    <style>
+        .like {
+            font-size: 20px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .cleanfloat::after {
+            display: block;
+            content: "";
+            visibility: hidden;
+            height: 0;
+        }
+        .score ul li {
+            list-style: none;
+            display: inline-block;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .layui-layer-rim{
+            text-align:center;
+            line-height:180px;
+            font-size:14px
+        }
+    </style>
+</head>
+<body class="sticky-header left-side-collapsed" style="">
+	<section>
+		<div class="main-content" style="margin-left:0px;padding-top:0px">
+			{% include '../common/header.html' %}
+			<div id="page-wrapper">
+				<div class="inner-content" align="center">
+					<div class="music-left" style="float:none;">
+						<div class="albums">
+							<div class="tittle-head">
+								<h3 class="tittle"><span class="new">MUSIC</span>音乐信息</h3>
+								<div class="clearfix"></div>
+							</div>
+							<div class="col-md-3 content-grid">
+								<a class="play-icon popup-with-zoom-anim" href="">
+                                    <img src="{{ music.image.url }}" title="{{ music.musicname }}">
+								</a>
+							</div>
+							<div class="col-md-3" style="width:74%;text-align: left">
+								<div style="margin-bottom:20px;font-size: 24px;font-weight: 500;color:black">{{ music.musicname }}</div>
+								<div style="margin-bottom:20px;font-size: 16px;font-weight: 300;color: #0c131b;">歌手：{{ music.singer }}</div>
+								<div style="margin-bottom:20px;font-size: 16px;color: #0c131b;">音乐类型：{{ music.typeid.typename }}</div>
+								<div style="margin-bottom:20px;font-size: 16px;font-weight: 300;color: #0c131b;">添加时间：{{ music.createtime }}</div>
+								<div class="btn btn-danger" onclick="javascript:window.open('/play?musicid={{ music.id }}')"
+									style="color: #fff;margin-right:30px" title="立即播放">
+									立即播放</div>
+								<div class="btn btn-warning" onclick="showPlaylist()" title="添加到歌单"
+									style="color: #fff;margin-right:30px">
+									添加到歌单</div>
+								<div style="display:inline-block;margin-right:30px">
+									收藏  <font class="like do_before_login_other" title="添加收藏">&#10084;</font>
+								</div>
+								<div class="score" style="display: inline-block;margin-right:30px">
+									<font style="display: inline-block">评分</font>
+									<ul class="cleanfloat" style="display: inline-block;padding:0px">
+										<li title="1分" data-info="1" class="do_before_login_other">&#9733;</li><li title="2分" data-info="2" class="do_before_login_other">&#9733;</li><li title="3分" data-info="3" class="do_before_login_other">&#9733;</li><li title="4分" data-info="4" class="do_before_login_other">&#9733;</li><li title="5分" data-info="5" class="do_before_login_other">&#9733;</li>
+									</ul>
+								</div>
+								<div style="font-size:16px;display:inline-block">
+									<a href="{{ music.url.url }}" target="_black" title="下载">下载</a>
+								</div>
+							</div>
+						</div>
+					  	<div class="post-media coment-form" style="float:none;text-align: left;width:100%;clear:both;">
+						    <h4>歌词</h4>
+					        <div class="entry-meta" >
+								{% autoescape off %}<p>{{ music.lyric }}</p>{% endautoescape %}
+						    </div>
+					  	</div>
+						<div class="coment-form" style="float:none;text-align: left;width:100%;clear:both;vertical-align: middle;">
+							<h4>评论</h4>
+							<textarea maxlength="255" style="display:inline-block" name="comment" id="comment" placeholder="请输入评论内容..."></textarea>
+								<div class="btn btn-success" id="a_comment"
+									style="color: #fff;margin-bottom: 28px;">
+									发表评论</div>
+						</div>
+						<div class="response coment-form" style="float:none;text-align: left;width:100%;clear:both;">
+							<h4>精彩评论</h4>
+							<div class="media response-info">
+                                {% if not pageBean %}
+                                    暂无数据
+                                {% endif %}
+								{% for comment in pageBean %}
+                                    <div class="media-left response-text-left">
+                                        <a class="" href="/user/detailCommon?userid={{ comment.userid.id }}"><img class="media-object" style="width:68px;height:68px"
+                                             src="{{ comment.userid.header.url }}" title="{{ comment.userid.username }}">
+                                        </a>
+                                        <h5 align="center">
+                                            <a href="/user/detailCommon?userid={{ comment.userid.id }}" title="{{ comment.userid.username }}">{{ comment.userid.username }}</a>
+                                        </h5>
+                                    </div>
+                                    <div class="media-body response-text-right">
+                                        <p>{{ comment.content }}</p>
+                                        {% if comment.parentid %}
+                                            <div style="font-size: 90%;color:#30a9a3;margin-left:60px">
+                                                <font style="font-weight:bolder;">被回复评论：</font>
+                                                <a href="#">{{ comment.parentid.userid.username }}</a>
+                                                发表于{{ comment.parentid.createtime }}
+                                                <br>
+                                                {{ comment.parentid.content }}
+                                             </div>
+                                        {% endif %}
+                                        <ul>
+                                            <li>{{ comment.createtime }}</li>
+                                            <li><a href="javascript:doComment({{ comment.id }})">回复</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                {% endfor %}
+								<form action="/music/detail" method="post" id="form">
+									{% csrf_token %}
+                                    <input type="hidden" name="musicid" value="{{ music.id }}">
+                                    <input type="hidden" name="page" value="{{ page }}" id="page">
+									{% include '../common/page.html' %}
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% include '../common/footer.html' %}
+	</section>
+	{% include '../common/js.html' %}
+</body>
+<div style="display:none">
+	<div id="playlist_div">
+		<ul class="list-group" style="margin:4% 4% 4% 4%">
+		    <li class="list-group-item">
+		  	    <a href="javascript:addPlaylist()">+新建歌单</a>
+		    </li>
+		    {% for playlist in playlists %}
+                <li class="list-group-item">
+                    <input type="radio" name="playlistid" value="{{ playlist.id }}"/>{{ playlist.playlistname }}
+                </li>
+            {% endfor %}
+		</ul>
+		<div class="form-group" align="center">
+			<div style="display:inline-block;" >
+					<div class="btn btn-danger" onclick="doPlaylist()" style="color: #fff;">
+					    提交信息
+                    </div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+		//展示歌单
+	function showPlaylist(){
+		//自定页
+		if(doIsLogin()){
+			layer.open({
+			  type: 1,
+			  skin: 'layui-layer-molv', //加上边框
+			  closeBtn: 1, //不显示关闭按钮
+			  shadeClose: true, //开启遮罩关闭
+			  area: ['30%', '60%'], //宽高
+			  title:"请选择歌单",
+			  content: $("#playlist_div").html()
+			});
+		}
+	}
+
+	//添加到歌单
+	function doPlaylist(){
+		var playlistid = $('input[name="playlistid"]:checked').val();
+		if(playlistid==null || playlistid==""){
+			layer.msg("请选择一个歌单！");
+			return false;
+		}
+		common_ajax_other("/playlistrecord/save",
+				"musicid={{ music.id }}&playlistid="+playlistid+"&csrfmiddlewaretoken={{ csrf_token }}");
+	}
+
+	//添加歌单
+	function addPlaylist(){
+		layer.prompt({title: '请输入歌单名称', formType: 3,maxlength:255}, function(text, index){
+			  common_ajax_other("/playlist/save","playlistname="+text+"&csrfmiddlewaretoken={{ csrf_token }}");
+		});
+	}
+
+	$(function() {
+		//收藏
+		var likeTemp = {% if collection %}true{% else %}false{% endif %};
+		if(likeTemp){
+			$(".like").css("color", '#f00');
+			$(".like").attr("title","取消收藏");
+		}else{
+			$(".like").css("color", '#ccc');
+			$(".like").attr("title","添加收藏");
+		}
+
+		$(".like").click(function() {
+			if(doIsLogin()){
+				var data = "musicid={{ music.id }}"+"&csrfmiddlewaretoken={{ csrf_token }}";
+				common_ajax_other("/collection/save",data);
+			}
+		});
+	//收藏
+
+	//评分
+		var scoreTemp = parseInt("{{ scorerecord.score }}");
+		var countTemp = 0;
+		$(".cleanfloat").find("li").each(function(){
+			if(countTemp<scoreTemp){
+				$(this).css("color", '#f00');
+				countTemp++;
+			}
+		});
+
+		$(".cleanfloat").find("li").click(function() {
+			if(doIsLogin()){
+				$(this).css("color", '#f00');
+				$(this).prevAll().css("color", '#f00');
+				$(this).nextAll().css("color", '#ccc');
+				var data = "musicid={{ music.id }}"+"&score="+$(this).attr("data-info")+"&csrfmiddlewaretoken={{ csrf_token }}";
+				common_ajax_other("/scorerecord/save",data);
+			}
+		});
+		//评分
+
+		//评论
+		$("#a_comment").click(function(){
+			if(doIsLogin()){
+				var comment = $("#comment").val();
+				if(comment==null || comment==""){
+					layer.msg("评论内容不能为空！");
+					return false;
+				}
+				var data = "musicid={{ music.id }}"+"&content="+comment+"&csrfmiddlewaretoken={{ csrf_token }}";
+				common_ajax_other("/comment/doComment",data);
+			}
+		});
+		//评论
+	});
+
+	//回复
+	function doComment(parentid){
+		if(doIsLogin()){
+			layer.prompt({title: '请输入回复内容', formType: 2, maxlength: 255}, function(text, index){
+			    if(text==null || text==""){
+			    	layer.msg("回复内容不能为空！");
+			    }else{
+			    	var data = "musicid={{ music.id }}"+"&content="+text+"&parentid="+parentid+"&csrfmiddlewaretoken={{ csrf_token }}";
+					common_ajax_other("/comment/doComment",data);
+			    }
+			});
+		}
+	}
+	//回复
+</script>
+</html>

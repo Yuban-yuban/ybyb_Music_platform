@@ -1,0 +1,22 @@
+<div class="albums" >
+    <div class="tittle-head">
+        <h3 class="tittle"><span class="new">HOT</span>热点推荐</h3>
+        <div class="clearfix"> </div>
+    </div>
+    {% if not hotMusics %}
+        暂无数据
+    {% endif %}
+    {% for music in hotMusics %}
+        <div class="col-md-3 content-grid {% if forloop.counter|divisibleby:4 %}last-grid{% endif %}">
+            <a class="play-icon popup-with-zoom-anim" href="/music/detail?musicid={{ music.id }}">
+                <img src="{{ music.image.url }}" title="{{ music.musicname }}">
+            </a>
+            <a class="button play-icon popup-with-zoom-anim" href="/music/detail?musicid={{ music.id }}"
+               title="{{ music.musicname }}">
+                {{ music.musicname }}
+            </a>
+        </div>
+        {% if forloop.counter|divisibleby:4 %}<div class="clearfix"> </div>{% endif %}
+    {% endfor %}
+</div>
+<div class="clearfix"> </div>

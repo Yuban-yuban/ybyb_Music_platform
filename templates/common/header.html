@@ -1,0 +1,50 @@
+{% load static %}
+<div class="header"
+	style="height:75px;width:100%;
+				position: fixed;z-index: 100;background-color: #009f95;
+				border-bottom: 1px solid #009f95;">
+	<a href="/" title="在线音乐推荐系统"
+		style="height:75px;line-height:65px;margin-left:10%;display:inline-block;">
+		<img style="height:50px;width:50px;border-radius:5px 5px" alt=""
+		src="{% static 'img/88.jpg' %}">
+		&nbsp;&nbsp; <font color="white"
+		style="font-weight: 400;font-size:25px">在线音乐推荐系统</font> </a>
+	<div style="width:40%;display:inline-block" align="center">
+		<div class="search_footer"
+			style="height:100px;line-height:75px;display:inline-block;width:60%" align="right">
+			<form action="/music/list" method="post">
+                {% csrf_token %}
+				<input type="text" placeholder="请输入音乐名称..." maxlength="50"
+                       name="musicname" value="{{ musicname }}"><input
+				type="submit" value=" 搜 索 " style="background: #dc4e41;position: relative;" title="搜索">
+			</form>
+		</div>
+	</div>
+	<div class="btn-group mb-2" style="width:15%;display:inline-block;color: #fff;" align="right">
+        {% if request.session.session_user_isLogin %}
+            <a href="#" style="height:75px;line-height:65px;box-shadow:none;-webkit-box-shadow:none" title="{{ request.session.session_user_username }}"
+				class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+				aria-expanded="false">
+				<img style="height:35px;width:35px;border-radius:5px 5px" alt=""
+				src="{{ request.session.session_user_header }}" title="{{ request.session.session_user_username }}" />
+				&nbsp;&nbsp; <font color="white" style="font-weight: 400;font-size:16px">{{ request.session.session_user_username }}</font>
+			</a>
+        {% else %}
+			<a href="/login" style="height:75px;line-height:65px;box-shadow:none;-webkit-box-shadow:none" title="登录">
+				<font color="white" style="font-weight: 400;font-size:16px">登录</font>
+			</a>
+			&nbsp;&nbsp;
+			<a href="/register" style="height:75px;line-height:65px;box-shadow:none;-webkit-box-shadow:none" title="注册">
+				<font color="white" style="font-weight: 400;font-size:16px">注册</font>
+			</a>
+        {% endif %}
+        <div class="dropdown-menu" style="left:50%">
+			<a class="dropdown-item" title="个人中心"
+               href="/user/detailCommon?userid={{ request.session.session_user_id }}">
+                个人中心
+            </a>
+			<a class="dropdown-item" title="设置" href="/user/edit">设置</a>
+			<a class="dropdown-item" title="注销" href="/logout">注销</a>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,29 @@
+{% load static %}
+<script src="{% static 'js/jquery-3.1.1.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+{% comment %}script.js{% endcomment %}
+<script src="{% static 'layer/layer.js' %}"></script>
+<script src="{% static 'js/common.js' %}"></script>
+<script>
+    var globalTimeout = 800;
+    var isLoginGlobal = Boolean("{{ request.session.session_user_isLogin }}");
+    //登录提示
+	function doIsLogin(){
+		if(!isLoginGlobal){
+			layer.open({
+			  type: 1,
+			  skin: '', //加上边框layui-layer-rim
+			  shade: 0.4,
+              shadeClose: true,
+			  title: "请先登录", //不显示标题
+			  area: ['450px', '300px'], //宽高
+			  content: '<div style="width:100%;height:100%;vertical-align: middle;text-align: center;" align="center">' +
+                  '<span class="sign__text" style="margin-top: 40px;display: inline-block;">' +
+                        '已有账号? <a href="/login">点击登录!</a></span>' + '&nbsp;&nbsp;&nbsp;&nbsp;' +
+                  '<span class="sign__text" style="margin-top: 40px;display: inline-block;">' +
+                        '没有账号? <a href="/register">点击注册!</a></span></div>'
+			});
+		}
+		return isLoginGlobal;
+	}
+</script>

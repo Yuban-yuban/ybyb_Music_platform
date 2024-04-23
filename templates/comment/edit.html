@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>信息维护【音乐推荐系统】</title>
+    {% include '../common/css.html' %}
+</head>
+<body class="sticky-header left-side-collapsed" style="">
+	<section>
+		<div class="main-content" style="margin-left:0px;padding-top:0px">
+			{% include '../common/header.html' %}
+			<div id="page-wrapper">
+				<div class="inner-content" align="center">
+					<div class="music-left" style="float:none;">
+						<div class="albums">
+							{% include '../common/menu.html' %}
+							<div class="col-md-3" style="width:74%;text-align: left">
+                                <form action="/comment/doEdit" method="post" class="form-horizontal" id="form">
+			                    	{% csrf_token %}
+                                    <input type="hidden" name="commentid" id="id" value="{{ comment.id }}"/>
+									<div class="form-group">
+						                <label for="inputEmail" class="col-sm-2 col-md-2 control-label" style="width:25%">音乐名称：</label>
+						                <div class="col-sm-6 col-md-6">
+						                    <input type="text" class="form-control" value="{{ comment.musicid.musicname }}"  readonly="readonly"/>
+						                </div>
+						            </div><div class="clearfix"> </div>
+						            <div class="form-group">
+						                <label for="inputEmail" class="col-sm-2 col-md-2 control-label" style="width:25%">被回复评论内容：</label>
+						                <div class="col-sm-9 col-md-9">
+						                	<textarea class="form-control" readonly="readonly">{{ comment.parentid.content }}</textarea>
+						                </div>
+						            </div><div class="clearfix"> </div>
+						             <div class="form-group">
+						                <label for="inputEmail" class="col-sm-2 col-md-2 control-label" style="width:25%">评论内容：</label>
+						                <div class="col-sm-9 col-md-9">
+						                	<textarea class="form-control" name="content" id="content" maxlength="255">{{ comment.content }}</textarea>
+						                </div>
+						            </div><div class="clearfix"> </div>
+						            <div class="form-group" align="center">
+										<div style="display:inline-block;" >
+											<a href="javascript:void(null)" id="submitBtn" class="toggle-btn"  style="width:100px;background:#ff410f">提交信息</a>
+										</div>
+									</div>
+			               		</form>
+							</div>
+						</div><div class="clearfix"> </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% include '../common/footer.html' %}
+	</section>
+    {% include '../common/js.html' %}
+</body>
+<script>
+	pathname = "/comment/list";
+	$(function(){
+		$("#submitBtn").on("click",function(){
+			var temp = true;
+			$("#form input[type='text']").each(function(){
+				if($(this).val()==null || $(this).val()==""){
+					temp = false;
+					return false;
+				}
+			});
+			var content = $("#content");
+			if(content.val()==null | content.val()==""){
+				temp = false;
+			}
+			if(!temp){
+				layer.msg("数据不能为空!");
+				return false;
+			}
+			common_ajax_other($("#form").attr("action"),$("#form").serialize());
+		});
+	});
+</script>
+</html>

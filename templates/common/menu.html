@@ -1,0 +1,93 @@
+<style>
+	.jp-playlist li {
+	    border-bottom: 1px solid #e8d1c9ee;
+	    background-color: #f3cabea1
+	}
+</style>
+<div class="tittle-head">
+	<h3 class="tittle">
+		<h3 class="tittle"><span class="new">SET</span>设置</h3>
+	</h3>
+	<div class="clearfix"></div>
+</div>
+<div class="col-md-3 content-grid">
+	<div class="jp-type-playlist" >
+		<div class="jp-playlist" style="">
+			<ul id="menuid" style="display: block;
+				font-size: 80%;padding:0px 0px 0px 0px;
+				width:100%;" >
+				<li class="" style="width:100%;border-radius: 10px 10px 0px 0px;">
+					<div style="width:100%;border-radius:5px 0;">
+						<a href="/user/edit" class="jp-playlist-item"
+							style="border-radius: 10px 10px 0px 0px;">
+							信息维护
+						</a>
+					</div>
+				</li>
+				<li style="width:100%">
+					<div >
+						<a href="/user/password" class="jp-playlist-item" >
+							密码安全
+						</a>
+					</div>
+				</li>
+				<li style="width:100%">
+					<div >
+						<a href="/labelrecord/edit" class="jp-playlist-item" >
+							我的标签
+						</a>
+					</div>
+				</li>
+				<li style="width:100%">
+					<div >
+						<a href="/playlist/list" class="jp-playlist-item" >
+							我的歌单
+						</a>
+					</div>
+				</li>
+				<li style="width:100%">
+					<div>
+						<a href="/playrecord/list" class="jp-playlist-item" >
+							播放记录
+						</a>
+					</div>
+				</li>
+					<li style="width:100%">
+					<div>
+						<a href="/collection/list" class="jp-playlist-item">
+							收藏记录
+						</a>
+					</div>
+				</li>
+				<li style="width:100%">
+					<div>
+						<a href="/scorerecord/list" class="jp-playlist-item" tabindex="0">
+							评分记录
+						</a>
+					</div>
+				</li>
+				<li style="width:100%;border-radius: 0px 0px 10px 10px;border-bottom: 0px">
+					<div>
+						<a href="/comment/list" class="jp-playlist-item"
+							style="border-radius: 0px 0px 10px 10px;">
+							评论记录
+						</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<script>
+	var pathname = "";//pathname是为一个页面中有多个操作，我的评论
+	//菜单选中js
+	window.onload = function(){
+		$("#menuid").find("a").each(function(){
+			if($(this).attr("href")==window.location.pathname
+					|| $(this).attr("href")==pathname){
+				$(this).addClass("jp-playlist-current");
+				return;
+			}
+		});
+	}
+</script>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>全部音乐【在线音乐推荐系统】</title>
+    {% include '../common/css.html' %}
+</head>
+<body class="sticky-header left-side-collapsed" style="">
+    <section>
+		<div class="main-content" style="margin-left:0px;padding-top:0px">
+			{% include '../common/header.html' %}
+			<div id="page-wrapper">
+				<div class="inner-content" align="center">
+					<div class="music-left" style="float:none;">
+						<div class="albums">
+							<div class="tittle-head">
+								<h3 class="tittle"><span class="new">ALL</span>全部音乐</h3>
+								<div class="clearfix"> </div>
+							</div>
+							<ul id="myTab" class="nav nav-tabs" role="tablist">
+								<li role="presentation" class="type_all"><a href="javascript:submitForm('')">全部音乐类型</a></li>
+                                {% for type in types %}
+                                    <li role="presentation" class="">
+                                        <a href='javascript:submitForm({{ type.id }})' data-info='{{ type.id }}'>{{ type.typename }}</a>
+                                    </li>
+                                {% endfor %}
+							</ul>
+							{% if not pageBean %}
+                                    暂无数据
+                            {% endif %}
+                            {% for music in pageBean %}
+                                <div class="col-md-3 content-grid {% if forloop.counter|divisibleby:4 %}last-grid{% endif %}">
+                                    <a class="play-icon popup-with-zoom-anim" href="/music/detail?musicid={{ music.id }}">
+									    <img src="{{ music.image.url }}" title="{{ music.musicname }}">
+                                    </a>
+                                    <a class="button play-icon popup-with-zoom-anim" href="/music/detail?musicid={{ music.id }}"
+                                        title="{{ music.musicname }}">
+									    {{ music.musicname }}
+                                    </a>
+                                </div>
+                                {% if forloop.counter|divisibleby:4 %}<div class="clearfix"> </div>{% endif %}
+                            {% endfor %}
+						</div>
+						<div class="clearfix"> </div>
+						<form action="/music/list" method="post" id="form">
+                            {% csrf_token %}
+    		  				<input type="hidden" name="page" value="{{ page }}" id="page">
+    		  				<input type="hidden" name="musicname" value="{{ musicname }}" >
+    		  				<input type="hidden" name="typeid" value="{{ typeid }}" id="typeid">
+    		  			</form>
+						{% include '../common/page.html' %}
+					</div>
+				</div>
+			</div>
+		</div>
+     	{% include '../common/footer.html' %}
+	</section>
+	{% include '../common/js.html' %}
+  </body>
+  <script type="text/javascript">
+  		var typeid = "{{ typeid }}";
+  		if(typeid!=null && typeid!=""){
+  			$("#myTab").find("li").each(function(){
+  				if($(this).find("a").attr("data-info")==typeid){
+  					$(this).addClass("active");
+  					return false;
+  				}
+  			});
+  		}else{
+  			$(".type_all").addClass("active");
+  		}
+
+  		function submitForm(typeid){
+  			$("#page").val(1);
+  			$("#typeid").val(typeid);
+  			$("#form").submit();
+  		}
+  </script>
+</html>
