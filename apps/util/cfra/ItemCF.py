@@ -17,6 +17,12 @@ class ItemCF(object):
         print("基于项目的协同过滤推荐算法开始")
 
         #############################################
+        print(dataModel.userItemPrefMatrixDic)
+        print(type(dataModel.userItemPrefMatrixDic))
+        print(type(dataModel))
+        print(dataModel)
+        #############################################
+
         # 获取项目id列表
         itemIDsList = dataModel.itemIDsList
         # 降序排列
@@ -70,6 +76,8 @@ class ItemCF(object):
         itemRecommender.printPref(recItemDic)
 
         print("\n基于项目的协同过滤推荐算法结束")
+        print(type(recItemDic))
+        print(recItemDic)
         return recItemDic
 
 

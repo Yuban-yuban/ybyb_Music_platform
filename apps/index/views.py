@@ -9,6 +9,7 @@ from apps.scorerecord.models import Scorerecord
 from apps.type.models import Type
 from apps.util.cfra.ItemCF import ItemCF
 from apps.util.cfra.UserCF import UserCF
+from apps.util.cfra.SvdCF import SvdCF
 from apps.util.cfra.model.DataModel import DataModel
 
 
@@ -40,7 +41,18 @@ def index(request):
         # 查找推荐结果
         userCfMusics = getRecommendMusics(recommenderItemFinalDicBasedUser)
         data["userCfMusics"] = userCfMusics
-        # print(data["userCfMusics"])
+        print(data["userCfMusics"])
+
+        #================================================================
+        #基于SVD推荐
+        svdCf = SvdCF()
+        # 调用推荐算法
+        recommenderItemFinalDicBasedSvd = svdCf.recommend(dataModel, int(cUserid))
+        # 查找推荐结果
+        svdCfMusics = getRecommendMusics(recommenderItemFinalDicBasedSvd)
+        data["svdCfMusics"] = svdCfMusics
+        #=================================================================
+
         # 基于项目推荐
         itemCF = ItemCF()
         # 调用推荐算法
@@ -48,6 +60,7 @@ def index(request):
         # 查找推荐结果
         itemCfMusics = getRecommendMusics(recommenderItemFinalDicBasedItem)
         data["itemCfMusics"] = itemCfMusics
+        #print(data)
 
     else:
         # 用户没有登录，进行热点推荐
